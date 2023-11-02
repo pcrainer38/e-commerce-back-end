@@ -7,11 +7,11 @@ const { Product, Category, Tag, ProductTag } = require('../../models');
 router.get('/', async (req, res) => {
   try {
     const productData = await Product.findAll({
-      include: [{ model: Category, model: ProductTag, model: Tag }],
+      include: [{ model: Category}, {model: ProductTag}, {model: Tag}]
     });
     res.status(200).json(productData);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   try {
     const productData = await Product.findByPk(req.params.id, {
-      inclulde: [{ model: Category, model: ProductTag, model: Tag }],
+      inclulde: [{ model: Category}, {model: ProductTag}, {model: Tag }],
     });
 
     if (!productData) {
@@ -29,19 +29,19 @@ router.get('/:id', async (req, res) => {
 
     res.status(200).json(productData);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 
 // create new product
 router.post('/', async (req, res) => {
-  Product.create({
+  const createdProduct = await Product.create({
     product_name: req.body.product_name,
     price: req.body.price,
     stock: req.body.stock,
-    tagIds: []
+    tagIds: req.body.tagIds
   })
-});
+
   /* req.body should look like this...
     {
       product_name: "Basketball",
@@ -70,7 +70,7 @@ router.post('/', async (req, res) => {
       console.log(err);
       res.status(400).json(err);
     });
-
+  });
 
 // update product
 router.put('/:id', (req, res) => {
