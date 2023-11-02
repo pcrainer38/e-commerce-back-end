@@ -42,7 +42,7 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
   const updatedCategory = await Category.update(
     {
-      id: req.body.id,
+
       category_name: req.body.category_name
     },
     {
